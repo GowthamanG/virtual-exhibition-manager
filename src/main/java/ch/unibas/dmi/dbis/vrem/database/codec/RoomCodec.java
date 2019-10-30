@@ -34,7 +34,7 @@ public class RoomCodec implements Codec<Room> {
     private final Codec<Vector3f> vectorCodec;
 
     /**
-     *
+     * C'est une documentation
      */
     public RoomCodec(CodecRegistry registry) {
         this.exhibitCodec = registry.get(Exhibit.class);

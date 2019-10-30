@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Room {
+/**
+ * A Corridor is a Room with only 2 walls
+ */
+public class Corridor {
+
 
     public final String text;
 
@@ -23,20 +27,19 @@ public class Room {
     private List<Exhibit> exhibits = new ArrayList<>();
     public Vector3f position;
     /**
-     *
-     * List of walls (4 max).
+     * List of walls (2 max).
      */
-    private List<Wall> walls = new ArrayList<>(4);
+    private List<Wall> walls = new ArrayList<>(2);
 
     public Room(String text, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
-        this(text, new ArrayList<>(4), floor.name(), ceiling.name(), size, position, entrypoint, null);
+        this(text, new ArrayList<>(2), floor.name(), ceiling.name(), size, position, entrypoint, null);
     }
 
     public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
         this(text, walls, floor.toString(), ceiling.toString(), size, position, entrypoint, null);
     }
 
-    public Room(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
+    public Corridor(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
         this.floor = floor;
         this.ceiling = ceiling;
         this.size = size;
@@ -57,6 +60,9 @@ public class Room {
         }
         return false;
     }
+
+    /*
+    //we dont need this functions
 
     public Wall getNorth() {
         return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
@@ -100,6 +106,8 @@ public class Room {
     public void setWest(Wall wall) {
         setWall(Direction.WEST, wall);
     }
+    */
+
 
     @Override
     public String toString() {
