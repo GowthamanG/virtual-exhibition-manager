@@ -8,20 +8,20 @@ import java.util.List;
 
 public class Room {
 
-    public final String text;
+    private String text;
 
-    public final String floor;
+    private String floor;
 
-    public final String ceiling;
+    private String ceiling;
 
-    public Vector3f size;
-    public Vector3f entrypoint;
-    public final String ambient;
+    private Vector3f size;
+    private Vector3f entrypoint;
+    private final String ambient;
     /**
      * List of exhibits (only 3D models valid).
      */
     private List<Exhibit> exhibits = new ArrayList<>();
-    public Vector3f position;
+    private Vector3f position;
     /**
      *
      * List of walls (4 max).
@@ -155,7 +155,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room{" + "text='" + text + '\'' + ", floor='" + floor + '\'' + ", ceiling='" + ceiling + '\'' + ", size=" + size + ", entrypoint=" + entrypoint + ", ambient='" + ambient + '\'' + ", exhibits=" + exhibits + ", position=" + position + ", walls=" + walls + '}';
+        return "Room{" + "text='" + this.text + '\'' + ", floor='" + this.floor + '\'' + ", ceiling='" + this.ceiling + '\'' + ", size=" + this.size + ", entrypoint=" + this.entrypoint + ", ambient='" + this.ambient + '\'' + ", exhibits=" + this.exhibits + ", position=" + this.position + ", walls=" + this.walls + '}';
     }
 
     public List<Exhibit> getExhibits() {
