@@ -47,6 +47,58 @@ public class Room {
         this.ambient = ambient;
     }
 
+    public String getText() {
+        return this.text;
+    }
+
+    public String getFloor() {
+        return this.floor;
+    }
+
+    public String getCeiling() {
+        return this.ceiling;
+    }
+
+    public Vector3f getSize() {
+        return this.size;
+    }
+
+    public void setSize(Vector3f size) {
+        this.size = size;
+    }
+
+    public Vector3f getEntrypoint() {
+        return entrypoint;
+    }
+
+    public void setEntrypoint(Vector3f entrypoint) {
+        this.entrypoint = entrypoint;
+    }
+
+    public String getAmbient() {
+        return this.ambient;
+    }
+
+    public void setExhibits(List<Exhibit> exhibits) {
+        this.exhibits = exhibits;
+    }
+
+    public Vector3f getPosition() {
+        return this.position;
+    }
+
+    public void setPosition(Vector3f position) {
+        this.position = position;
+    }
+
+    public List<Wall> getWalls() {
+        return this.walls;
+    }
+
+    public void setWalls(List<Wall> walls) {
+        this.walls = walls;
+    }
+
     public boolean placeExhibit(Exhibit exhibit) {
         if (exhibit.type != CulturalHeritageObject.CHOType.MODEL) {
             throw new IllegalArgumentException("Only 3D objects can be placed in a room.");
