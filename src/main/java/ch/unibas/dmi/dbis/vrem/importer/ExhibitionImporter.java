@@ -168,8 +168,8 @@ public class ExhibitionImporter implements Runnable {
             roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, ROOM_SIZE, Vector3f.ORIGIN, ENTRYPOINT);
             LOGGER.debug("Created new room without room config");
         }
-        roomConfig.size = ROOM_SIZE;
-        roomConfig.entrypoint = ENTRYPOINT;
+        roomConfig.setSize(ROOM_SIZE);
+        roomConfig.setEntrypoint(ENTRYPOINT);
         File north = Paths.get(room.getPath(), NORTH_WALL_NAME).toFile();
         File east = Paths.get(room.getPath(), EAST_WALL_NAME).toFile();
         File south = Paths.get(room.getPath(), SOUTH_WALL_NAME).toFile();
@@ -180,7 +180,7 @@ public class ExhibitionImporter implements Runnable {
         roomConfig.setSouth(importWall(SOUTH, south, root));
         roomConfig.setWest(importWall(WEST, west, root));
 
-        roomConfig.position = calculatePosition(roomConfig, siblings);
+        roomConfig.setPosition(calculatePosition(roomConfig, siblings));
 
         return roomConfig;
     }

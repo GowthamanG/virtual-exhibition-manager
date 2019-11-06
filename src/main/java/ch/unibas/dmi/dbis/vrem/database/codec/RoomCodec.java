@@ -111,15 +111,15 @@ public class RoomCodec implements Codec<Room> {
     @Override
     public void encode(BsonWriter writer, Room value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeString(FIELD_NAME_TEXT, value.text);
-        writer.writeString(FIELD_NAME_FLOOR, value.floor);
-        writer.writeString(FIELD_NAME_CEILING, value.ceiling);
+        writer.writeString(FIELD_NAME_TEXT, value.getText());
+        writer.writeString(FIELD_NAME_FLOOR, value.getFloor());
+        writer.writeString(FIELD_NAME_CEILING, value.getCeiling());
         writer.writeName(FIELD_NAME_SIZE);
-        this.vectorCodec.encode(writer, value.size, encoderContext);
+        this.vectorCodec.encode(writer, value.getSize(), encoderContext);
         writer.writeName(FIELD_NAME_POSITION);
-        this.vectorCodec.encode(writer, value.position, encoderContext);
+        this.vectorCodec.encode(writer, value.getPosition(), encoderContext);
         writer.writeName(FIELD_NAME_ENTRYPOINT);
-        this.vectorCodec.encode(writer, value.entrypoint, encoderContext);
+        this.vectorCodec.encode(writer, value.getEntrypoint(), encoderContext);
         writer.writeName(FIELD_NAME_WALLS);
         writer.writeStartArray();
         this.wallCodec.encode(writer, value.getNorth(), encoderContext);
@@ -133,8 +133,8 @@ public class RoomCodec implements Codec<Room> {
             this.exhibitCodec.encode(writer, exhibit, encoderContext);
         }
         writer.writeEndArray();
-        if (value.ambient != null) {
-            writer.writeString(FIELD_NAME_AMBIENT, value.ambient);
+        if (value.getAmbient() != null) {
+            writer.writeString(FIELD_NAME_AMBIENT, value.getAmbient());
         }
         writer.writeEndDocument();
     }
