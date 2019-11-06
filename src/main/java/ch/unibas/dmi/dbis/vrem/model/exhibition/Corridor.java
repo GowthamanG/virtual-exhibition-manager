@@ -26,13 +26,6 @@ public class Corridor extends Room {
     }
 
     public Corridor(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
-        this.floor = floor;
-        this.ceiling = ceiling;
-        this.size = size;
-        this.text = text;
-        this.position = position;
-        this.entrypoint = entrypoint;
-        this.walls.addAll(walls);
-        this.ambient = ambient;
+        super(text, walls, floor, ceiling, size, position, entrypoint, ambient);
     }
 }
