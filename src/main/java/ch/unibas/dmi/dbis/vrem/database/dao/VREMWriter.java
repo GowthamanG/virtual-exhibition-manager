@@ -51,7 +51,7 @@ public class VREMWriter extends VREMDao {
 
         if(mongoCollection.countDocuments() == 0){
             LOGGER.debug("There is no previous document in {} collection. We're adding one", CORPUS_COLLECTION);
-            ArtCollection artCollection = new ArtCollection("Classics", Arrays.asList(to_add));
+            ArtCollection artCollection = new ArtCollection("classics", Arrays.asList(to_add));
             mongoCollection.insertOne(artCollection);
             LOGGER.debug("Successfully inserted a new artcollection");
         }else{
