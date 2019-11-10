@@ -11,12 +11,7 @@ import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMWriter;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Direction;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.*;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject.CHOType;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
@@ -67,11 +62,13 @@ public class ExhibitionImporter implements Runnable {
     public static final String SOUTH_WALL_NAME = "south";
     public static final String WEST_WALL_NAME = "west";
     public static final String ROOM_CONFIG_FILE = "room-config.json";
+    public static final String CORRIDOR_CONFIG_FILE = "corridor-config.json";
     public static final String WALL_CONFIG_FILE = "wall-config.json";
     public static final String PNG_EXTENSION = "png";
     public static final String JPG_EXTENSION = "jpg";
     public static final String JSON_EXTENSION = "json";
     public static final Vector3f ROOM_SIZE = new Vector3f(10, 5, 10);
+    public static final Vector3f CORRIDOR_SIZE = new Vector3f(10, 3, 10);
     public static final Vector3f ENTRYPOINT = Vector3f.ORIGIN;
 
     public static final float ROOM_BORDER = 0.5f;
@@ -143,6 +140,7 @@ public class ExhibitionImporter implements Runnable {
                 }
                 try {
                     exhibition.addRoom(importRoom(exhibitionRoot.getParent(), f, exhibition.getRooms()));
+                    exhibition.addCorridor(importCorridor(exhibitionRoot.getParent(), f, exhibition.getCorridors()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -168,8 +166,8 @@ public class ExhibitionImporter implements Runnable {
             roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, ROOM_SIZE, Vector3f.ORIGIN, ENTRYPOINT);
             LOGGER.debug("Created new room without room config");
         }
-        roomConfig.size = ROOM_SIZE;
-        roomConfig.entrypoint = ENTRYPOINT;
+        roomConfig.setSize(ROOM_SIZE);
+        roomConfig.setEntrypoint(ENTRYPOINT);
         File north = Paths.get(room.getPath(), NORTH_WALL_NAME).toFile();
         File east = Paths.get(room.getPath(), EAST_WALL_NAME).toFile();
         File south = Paths.get(room.getPath(), SOUTH_WALL_NAME).toFile();
@@ -180,9 +178,37 @@ public class ExhibitionImporter implements Runnable {
         roomConfig.setSouth(importWall(SOUTH, south, root));
         roomConfig.setWest(importWall(WEST, west, root));
 
-        roomConfig.position = calculatePosition(roomConfig, siblings);
+        roomConfig.setPosition(calculatePosition(roomConfig, siblings));
 
         return roomConfig;
+    }
+
+    private Corridor importCorridor(Path root, File corridor, List<Corridor> siblings) throws IOException {
+        LOGGER.info("Importing Corridor {}", corridor);
+        if (!corridor.isDirectory()) {
+            throw new IllegalArgumentException("Cannot import file-based corridors. Only folder-based corridors are supported.");
+        }
+
+        Corridor corridorConfig;
+        if (Paths.get(corridor.getPath(), ROOM_CONFIG_FILE).toFile().exists()) {
+            String configJson = new String(Files.readAllBytes(Paths.get(corridor.getPath(), CORRIDOR_CONFIG_FILE)), UTF_8);
+            corridorConfig = gson.fromJson(configJson, Corridor.class);
+            LOGGER.trace("Loaded corridor config:\n{}", gson.toJson(corridorConfig));
+        } else {
+            corridorConfig = new Corridor(corridor.getName(), Texture.NONE, Texture.NONE, CORRIDOR_SIZE, Vector3f.ORIGIN, ENTRYPOINT);
+            LOGGER.debug("Created new Corridor without corridor config");
+        }
+        corridorConfig.setSize(CORRIDOR_SIZE);
+        corridorConfig.setEntrypoint(ENTRYPOINT);
+        File north = Paths.get(corridor.getPath(), NORTH_WALL_NAME).toFile();
+        File south = Paths.get(corridor.getPath(), SOUTH_WALL_NAME).toFile();
+
+        corridorConfig.setNorth(importWall(NORTH, north, root));
+        corridorConfig.setSouth(importWall(SOUTH, south, root));
+
+        corridorConfig.setPosition(calculatePosition(corridorConfig, siblings));
+
+        return corridorConfig;
     }
 
     private Wall importWall(Direction dir, File wallFolder, Path root) throws IOException {
@@ -284,6 +310,11 @@ public class ExhibitionImporter implements Runnable {
     }
 
     private Vector3f calculatePosition(Room r, List<Room> siblings) {
+        // Totally arbitrary
+        return new Vector3f(siblings.size(), 0, 0);
+    }
+
+    private Vector3f calculatePosition(Corridor c, List<Corridor> siblings) {
         // Totally arbitrary
         return new Vector3f(siblings.size(), 0, 0);
     }
