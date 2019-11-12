@@ -5,7 +5,7 @@
     "database" : "vrem"
   },
   "server" : {
-    "documentRoot" : "/home/remo/virtue/vre-fantasy",
+    "documentRoot" : "../vre-mixnhack19",
     "port" : 4567
   }
 }

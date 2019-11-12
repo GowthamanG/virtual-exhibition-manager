@@ -198,15 +198,15 @@ public class ExhibitionImporter implements Runnable {
             corridorConfig = new Corridor(corridor.getName(), Texture.NONE, Texture.NONE, CORRIDOR_SIZE, Vector3f.ORIGIN, ENTRYPOINT);
             LOGGER.debug("Created new Corridor without corridor config");
         }
-        corridorConfig.setSize(CORRIDOR_SIZE);
-        corridorConfig.setEntrypoint(ENTRYPOINT);
+        corridorConfig.size = CORRIDOR_SIZE;
+        corridorConfig.entrypoint = ENTRYPOINT;
         File north = Paths.get(corridor.getPath(), NORTH_WALL_NAME).toFile();
         File south = Paths.get(corridor.getPath(), SOUTH_WALL_NAME).toFile();
 
         corridorConfig.setNorth(importWall(NORTH, north, root));
         corridorConfig.setSouth(importWall(SOUTH, south, root));
 
-        corridorConfig.setPosition(calculatePosition(corridorConfig, siblings));
+        corridorConfig.position = calculatePosition(corridorConfig, siblings);
 
 
         return corridorConfig;

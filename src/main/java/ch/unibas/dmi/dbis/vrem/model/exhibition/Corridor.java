@@ -9,16 +9,31 @@ import java.util.List;
 /**
  * A Corridor is a Room with only 2 walls
  */
-public class Corridor extends Room {
+public class Corridor {
 
 
+    public final String text;
+
+    public final String floor;
+
+    public final String ceiling;
+
+    public Vector3f size;
+    public Vector3f entrypoint;
+    public final String ambient;
     /**
-     * List of walls (2 max).
+     * List of exhibits (only 3D models valid).
+     */
+    private List<Exhibit> exhibits = new ArrayList<>();
+    public Vector3f position;
+    /**
+     *
+     * List of walls (4 max).
      */
     private List<Wall> walls = new ArrayList<>(2);
 
     public Corridor(String text, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
-        this(text, new ArrayList<>(2), floor.name(), ceiling.name(), size, position, entrypoint, null);
+        this(text, new ArrayList<>(4), floor.name(), ceiling.name(), size, position, entrypoint, null);
     }
 
     public Corridor(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
@@ -26,6 +41,63 @@ public class Corridor extends Room {
     }
 
     public Corridor(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
-        super(text, walls, floor, ceiling, size, position, entrypoint, ambient);
+        this.floor = floor;
+        this.ceiling = ceiling;
+        this.size = size;
+        this.text = text;
+        this.position = position;
+        this.entrypoint = entrypoint;
+        this.walls.addAll(walls);
+        this.ambient = ambient;
+    }
+
+    public boolean placeExhibit(Exhibit exhibit) {
+        if (exhibit.type != CulturalHeritageObject.CHOType.MODEL) {
+            throw new IllegalArgumentException("Only 3D objects can be placed in a room.");
+        }
+        if (!this.exhibits.contains(exhibit)) {
+            this.exhibits.add(exhibit);
+            return true;
+        }
+        return false;
+    }
+
+    public Wall getNorth() {
+        return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+    }
+
+    public void setNorth(Wall wall) {
+        setWall(Direction.NORTH, wall);
+    }
+
+    private void setWall(Direction dir, Wall w) {
+        if (w.direction != dir) {
+            throw new IllegalArgumentException("Wall direction not matching. Expected " + dir + ", but " + w.direction + " given");
+        }
+        //this.walls.add(dir.ordinal(),w);
+        if (this.walls == null) {
+            this.walls = new ArrayList<>();
+        }
+        this.walls.add(w);
+    }
+
+    public Wall getSouth() {
+        return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+    }
+
+    public void setSouth(Wall wall) {
+        setWall(Direction.SOUTH, wall);
+    }
+
+    @Override
+    public String toString() {
+        return "Corridor{" + "text='" + this.text + '\'' + ", floor='" + this.floor + '\'' + ", ceiling='" + this.ceiling + '\'' + ", size=" + this.size + ", entrypoint=" + this.entrypoint + ", ambient='" + this.ambient + '\'' + ", exhibits=" + this.exhibits + ", position=" + this.position + ", walls=" + this.walls + '}';
+    }
+
+    public List<Exhibit> getExhibits() {
+        if (this.exhibits == null) {
+            exhibits = new ArrayList<>();
+        }
+        return Collections.unmodifiableList(this.exhibits);
     }
 }
