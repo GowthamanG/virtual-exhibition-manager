@@ -8,20 +8,20 @@ import java.util.List;
 
 public class Room {
 
-    private String text;
+    public final String text;
 
-    private String floor;
+    public final String floor;
 
-    private String ceiling;
+    public final String ceiling;
 
-    private Vector3f size;
-    private Vector3f entrypoint;
-    private final String ambient;
+    public Vector3f size;
+    public Vector3f entrypoint;
+    public final String ambient;
     /**
      * List of exhibits (only 3D models valid).
      */
     private List<Exhibit> exhibits = new ArrayList<>();
-    private Vector3f position;
+    public Vector3f position;
     /**
      *
      * List of walls (4 max).
@@ -45,58 +45,6 @@ public class Room {
         this.entrypoint = entrypoint;
         this.walls.addAll(walls);
         this.ambient = ambient;
-    }
-
-    public String getText() {
-        return this.text;
-    }
-
-    public String getFloor() {
-        return this.floor;
-    }
-
-    public String getCeiling() {
-        return this.ceiling;
-    }
-
-    public Vector3f getSize() {
-        return this.size;
-    }
-
-    public void setSize(Vector3f size) {
-        this.size = size;
-    }
-
-    public Vector3f getEntrypoint() {
-        return entrypoint;
-    }
-
-    public void setEntrypoint(Vector3f entrypoint) {
-        this.entrypoint = entrypoint;
-    }
-
-    public String getAmbient() {
-        return this.ambient;
-    }
-
-    public void setExhibits(List<Exhibit> exhibits) {
-        this.exhibits = exhibits;
-    }
-
-    public Vector3f getPosition() {
-        return this.position;
-    }
-
-    public void setPosition(Vector3f position) {
-        this.position = position;
-    }
-
-    public List<Wall> getWalls() {
-        return this.walls;
-    }
-
-    public void setWalls(List<Wall> walls) {
-        this.walls = walls;
     }
 
     public boolean placeExhibit(Exhibit exhibit) {

@@ -95,6 +95,11 @@ public class ExhibitionCodec implements Codec<Exhibition> {
         for (Room room : value.getRooms()) {
             this.codecRoom.encode(writer, room, encoderContext);
         }
+        writer.writeEndArray();
+
+        writer.writeName(FIELD_NAME_CORRIDORS);
+        writer.writeStartArray();
+
         for (Corridor corridor : value.getCorridors()) {
             this.codecCorridor.encode(writer, corridor, encoderContext);
         }
