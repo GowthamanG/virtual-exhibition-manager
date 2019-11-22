@@ -89,7 +89,7 @@ public class Exhibition {
             this.corridors.forEach(r -> {
                 list.addAll(r.getExhibits());
                 list.addAll(r.getNorth().getExhibits());
-                list.addAll(r.getWest().getExhibits());
+                list.addAll(r.getSouth().getExhibits());
             });
         }
 
