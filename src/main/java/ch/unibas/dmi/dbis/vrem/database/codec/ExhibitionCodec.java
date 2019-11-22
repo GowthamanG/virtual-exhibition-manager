@@ -99,7 +99,6 @@ public class ExhibitionCodec implements Codec<Exhibition> {
 
         writer.writeName(FIELD_NAME_CORRIDORS);
         writer.writeStartArray();
-
         for (Corridor corridor : value.getCorridors()) {
             this.codecCorridor.encode(writer, corridor, encoderContext);
         }

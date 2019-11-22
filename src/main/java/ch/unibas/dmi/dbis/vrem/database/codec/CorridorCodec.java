@@ -109,21 +109,19 @@ public class CorridorCodec implements Codec<Corridor> {
     @Override
     public void encode(BsonWriter writer, Corridor value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeString(FIELD_NAME_TEXT, value.getText());
-        writer.writeString(FIELD_NAME_FLOOR, value.getFloor());
-        writer.writeString(FIELD_NAME_CEILING, value.getCeiling());
+        writer.writeString(FIELD_NAME_TEXT, value.text);
+        writer.writeString(FIELD_NAME_FLOOR, value.floor);
+        writer.writeString(FIELD_NAME_CEILING, value.ceiling);
         writer.writeName(FIELD_NAME_SIZE);
-        this.vectorCodec.encode(writer, value.getSize(), encoderContext);
+        this.vectorCodec.encode(writer, value.size, encoderContext);
         writer.writeName(FIELD_NAME_POSITION);
-        this.vectorCodec.encode(writer, value.getPosition(), encoderContext);
+        this.vectorCodec.encode(writer, value.position, encoderContext);
         writer.writeName(FIELD_NAME_ENTRYPOINT);
-        this.vectorCodec.encode(writer, value.getEntrypoint(), encoderContext);
+        this.vectorCodec.encode(writer, value.entrypoint, encoderContext);
         writer.writeName(FIELD_NAME_WALLS);
         writer.writeStartArray();
         this.wallCodec.encode(writer, value.getNorth(), encoderContext);
-        this.wallCodec.encode(writer, value.getEast(), encoderContext);
         this.wallCodec.encode(writer, value.getSouth(), encoderContext);
-        this.wallCodec.encode(writer, value.getWest(), encoderContext);
         writer.writeEndArray();
         writer.writeName(FIELD_NAME_EXHIBITS);
         writer.writeStartArray();
@@ -131,8 +129,8 @@ public class CorridorCodec implements Codec<Corridor> {
             this.exhibitCodec.encode(writer, exhibit, encoderContext);
         }
         writer.writeEndArray();
-        if (value.getAmbient() != null) {
-            writer.writeString(FIELD_NAME_AMBIENT, value.getAmbient());
+        if (value.ambient != null) {
+            writer.writeString(FIELD_NAME_AMBIENT, value.ambient);
         }
         writer.writeEndDocument();
     }
