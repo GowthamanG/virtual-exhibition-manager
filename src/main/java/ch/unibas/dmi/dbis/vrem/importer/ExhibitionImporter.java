@@ -70,6 +70,7 @@ public class ExhibitionImporter implements Runnable {
     public static final Vector3f ROOM_SIZE = new Vector3f(10, 5, 10);
     public static final Vector3f CORRIDOR_SIZE = new Vector3f(10, 3, 10);
     public static final Vector3f ENTRYPOINT = Vector3f.ORIGIN;
+    public static final List<Room> CONNECTS = new ArrayList<>();
 
     public static final float ROOM_BORDER = 0.5f;
     public static final float EXHIBIT_PADDING = 1f;
@@ -195,7 +196,7 @@ public class ExhibitionImporter implements Runnable {
             corridorConfig = gson.fromJson(configJson, Corridor.class);
             LOGGER.trace("Loaded corridor config:\n{}", gson.toJson(corridorConfig));
         } else {
-            corridorConfig = new Corridor(corridor.getName(), Texture.NONE, Texture.NONE, CORRIDOR_SIZE, Vector3f.ORIGIN, ENTRYPOINT);
+            corridorConfig = new Corridor(corridor.getName(), Texture.NONE, Texture.NONE, CORRIDOR_SIZE, Vector3f.ORIGIN, ENTRYPOINT, CONNECTS);
             LOGGER.debug("Created new Corridor without corridor config");
         }
         corridorConfig.size = CORRIDOR_SIZE;
@@ -207,6 +208,8 @@ public class ExhibitionImporter implements Runnable {
         corridorConfig.setSouth(importWall(SOUTH, south, root));
 
         corridorConfig.position = calculatePosition(corridorConfig, siblings);
+
+        corridorConfig.connects = CONNECTS;
 
 
         return corridorConfig;

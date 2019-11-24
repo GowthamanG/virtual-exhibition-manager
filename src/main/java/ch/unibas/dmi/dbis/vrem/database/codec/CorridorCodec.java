@@ -24,12 +24,15 @@ public class CorridorCodec implements Codec<Corridor> {
     private final String FIELD_NAME_WALLS = "walls";
     private final String FIELD_NAME_EXHIBITS = "exhibits";
     private final String FIELD_NAME_AMBIENT = "ambient";
+    private final String FIELD_NAME_CONNECTS = "connects";
 
     private final Codec<Exhibit> exhibitCodec;
 
     private final Codec<Wall> wallCodec;
 
     private final Codec<Vector3f> vectorCodec;
+
+    private final Codec<Room> roomCodec;
 
     /**
      *
@@ -38,6 +41,7 @@ public class CorridorCodec implements Codec<Corridor> {
         this.exhibitCodec = registry.get(Exhibit.class);
         this.wallCodec = registry.get(Wall.class);
         this.vectorCodec = registry.get(Vector3f.class);
+        this.roomCodec = registry.get(Room.class);
     }
 
     /**
@@ -55,6 +59,7 @@ public class CorridorCodec implements Codec<Corridor> {
         List<Wall> walls = new ArrayList<>();
         List<Exhibit> exhibits = new ArrayList<>();
         String ambient = null;
+        List<Room> connects = new ArrayList<>();
 
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
@@ -93,13 +98,20 @@ public class CorridorCodec implements Codec<Corridor> {
                 case FIELD_NAME_AMBIENT:
                     ambient = reader.readString();
                     break;
+                case FIELD_NAME_CONNECTS:
+                    reader.readStartArray();
+                    while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                        connects.add(this.roomCodec.decode(reader, decoderContext));
+                    }
+                    reader.readEndArray();
+                    break;
                 default:
                     reader.skipValue();
                     break;
             }
         }
         reader.readEndDocument();
-        final Corridor corridor = new Corridor(text, walls, floor, ceiling, size, position, entrypoint, ambient);
+        final Corridor corridor = new Corridor(text, walls, floor, ceiling, size, position, entrypoint, ambient, connects);
         for (Exhibit exhibit : exhibits) {
             corridor.placeExhibit(exhibit);
         }
@@ -132,6 +144,12 @@ public class CorridorCodec implements Codec<Corridor> {
         if (value.ambient != null) {
             writer.writeString(FIELD_NAME_AMBIENT, value.ambient);
         }
+        writer.writeName(FIELD_NAME_CONNECTS);
+        writer.writeStartArray();
+        for (Room connect : value.connects) {
+            this.roomCodec.encode(writer, connect, encoderContext);
+        }
+        writer.writeEndArray();
         writer.writeEndDocument();
     }
 
