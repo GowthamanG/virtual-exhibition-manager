@@ -184,7 +184,7 @@ public class ExhibitionImporter implements Runnable {
         return roomConfig;
     }
 
-    private Corridor importCorridor(Path root, File corridor, List<Corridor> siblings) throws IOException {
+    private Corridor importCorridor(Path root, File corridor, List<Corridor> siblingsCorridors) throws IOException {
         LOGGER.info("Importing Corridor {}", corridor);
         if (!corridor.isDirectory()) {
             throw new IllegalArgumentException("Cannot import file-based corridors. Only folder-based corridors are supported.");
@@ -207,10 +207,7 @@ public class ExhibitionImporter implements Runnable {
         corridorConfig.setNorth(importWall(NORTH, north, root));
         corridorConfig.setSouth(importWall(SOUTH, south, root));
 
-        corridorConfig.position = calculatePosition(corridorConfig, siblings);
-
-        corridorConfig.connects = CONNECTS;
-
+        corridorConfig.position = calculatePosition(corridorConfig, siblingsCorridors);
 
         return corridorConfig;
     }
