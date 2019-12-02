@@ -209,6 +209,8 @@ public class ExhibitionImporter implements Runnable {
 
         corridorConfig.position = calculatePosition(corridorConfig, siblingsCorridors);
 
+        corridorConfig.connects = CONNECTS;
+
         return corridorConfig;
     }
 
