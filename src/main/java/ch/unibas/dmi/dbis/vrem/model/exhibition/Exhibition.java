@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import org.bson.types.ObjectId;
 
@@ -58,10 +59,9 @@ public class Exhibition {
         }else{
             this.rooms.forEach(r -> {
                 list.addAll(r.getExhibits());
-                list.addAll(r.getNorth().getExhibits());
-                list.addAll(r.getEast().getExhibits());
-                list.addAll(r.getSouth().getExhibits());
-                list.addAll(r.getWest().getExhibits());
+                r.getWalls().forEach(w -> {
+                    list.addAll(w.getExhibits());
+                });
             });
         }
         return Collections.unmodifiableList(list);

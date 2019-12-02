@@ -1,6 +1,8 @@
-package ch.unibas.dmi.dbis.vrem.model.exhibition;
+package ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import java.util.ArrayList;
 import java.util.Collections;

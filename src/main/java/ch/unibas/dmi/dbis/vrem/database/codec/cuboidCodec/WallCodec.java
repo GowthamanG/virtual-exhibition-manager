@@ -1,9 +1,9 @@
-package ch.unibas.dmi.dbis.vrem.database.codec;
+package ch.unibas.dmi.dbis.vrem.database.codec.cuboidCodec;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Direction;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Wall;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.BsonReader;

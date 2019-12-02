@@ -1,9 +1,9 @@
 package ch.unibas.dmi.dbis.vrem.importer;
 
-import static ch.unibas.dmi.dbis.vrem.model.exhibition.Direction.EAST;
-import static ch.unibas.dmi.dbis.vrem.model.exhibition.Direction.NORTH;
-import static ch.unibas.dmi.dbis.vrem.model.exhibition.Direction.SOUTH;
-import static ch.unibas.dmi.dbis.vrem.model.exhibition.Direction.WEST;
+import static ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction.EAST;
+import static ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction.NORTH;
+import static ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction.SOUTH;
+import static ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction.WEST;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import ch.unibas.dmi.dbis.vrem.config.Config;
@@ -11,12 +11,12 @@ import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMWriter;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Direction;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Wall;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject.CHOType;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
@@ -71,7 +71,7 @@ public class ExhibitionImporter implements Runnable {
     public static final String PNG_EXTENSION = "png";
     public static final String JPG_EXTENSION = "jpg";
     public static final String JSON_EXTENSION = "json";
-    public static final Vector3f ROOM_SIZE = new Vector3f(10, 5, 10);
+    //public static final Vector3f ROOM_SIZE = new Vector3f(10, 5, 10);
     public static final Vector3f ENTRYPOINT = Vector3f.ORIGIN;
 
     public static final float ROOM_BORDER = 0.5f;
@@ -165,36 +165,48 @@ public class ExhibitionImporter implements Runnable {
             roomConfig = gson.fromJson(configJson, Room.class);
             LOGGER.trace("Loaded room config:\n{}", gson.toJson(roomConfig));
         } else {
-            roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, ROOM_SIZE, Vector3f.ORIGIN, ENTRYPOINT);
+            roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, Vector3f.ORIGIN, ENTRYPOINT);
             LOGGER.debug("Created new room without room config");
         }
-        roomConfig.size = ROOM_SIZE;
         roomConfig.entrypoint = ENTRYPOINT;
         File north = Paths.get(room.getPath(), NORTH_WALL_NAME).toFile();
         File east = Paths.get(room.getPath(), EAST_WALL_NAME).toFile();
         File south = Paths.get(room.getPath(), SOUTH_WALL_NAME).toFile();
         File west = Paths.get(room.getPath(), WEST_WALL_NAME).toFile();
 
-        roomConfig.setNorth(importWall(NORTH, north, root));
-        roomConfig.setEast(importWall(EAST, east, root));
-        roomConfig.setSouth(importWall(SOUTH, south, root));
-        roomConfig.setWest(importWall(WEST, west, root));
+        List<File> wallFiles = new ArrayList<>();
+        boolean wallAvailable = false;
+        int wallNumber = 0;
+
+        do {
+            wallFiles.add(Paths.get(room.getPath(), String.valueOf(wallNumber)).toFile());
+
+            if(Files.exists(Paths.get(room.getPath(), String.valueOf(wallNumber + 1))))
+                wallAvailable = true;
+            else
+                wallAvailable = false;
+
+        } while (wallAvailable);
+
+        for (int i = 0; i < wallFiles.size(); i++) {
+            roomConfig.addWall(importWall(i, wallFiles.get(i), root));
+        }
 
         roomConfig.position = calculatePosition(roomConfig, siblings);
 
         return roomConfig;
     }
 
-    private Wall importWall(Direction dir, File wallFolder, Path root) throws IOException {
+    private Wall importWall(int wallNumber, File wallFolder, Path root) throws IOException {
         LOGGER.trace("Importing wall {}", wallFolder);
         Wall wallConfig;
         if (Paths.get(wallFolder.getPath(), WALL_CONFIG_FILE).toFile().exists()) {
             String json = new String(Files.readAllBytes(Paths.get(wallFolder.getPath(), WALL_CONFIG_FILE)), UTF_8);
             wallConfig = gson.fromJson(json, Wall.class);
-            wallConfig.direction = dir;
+            wallConfig.wallNumber = wallNumber;
             LOGGER.trace("Loaded wall config:\n{}", gson.toJson(wallConfig));
         } else {
-            wallConfig = new Wall(dir, Texture.NONE.name());
+            wallConfig = new Wall(wallNumber, Texture.NONE.name());
             LOGGER.debug("Created new wall with default config");
         }
 
@@ -297,10 +309,9 @@ public class ExhibitionImporter implements Runnable {
         if (exhibition != null) {
             for (Room r : exhibition.getRooms()) {
                 List<Exhibit> exhibits = new ArrayList<>(r.getExhibits());
-                exhibits.addAll(r.getNorth().getExhibits());
-                exhibits.addAll(r.getEast().getExhibits());
-                exhibits.addAll(r.getSouth().getExhibits());
-                exhibits.addAll(r.getWest().getExhibits());
+                for (Wall w: r.getWalls()) {
+                    exhibits.addAll(w.getExhibits());
+                }
                 for (Exhibit e : exhibits) {
                     LOGGER.trace("Probe: {}, needle: {}", e.path, path);
                     if (path.equals(e.path)) {

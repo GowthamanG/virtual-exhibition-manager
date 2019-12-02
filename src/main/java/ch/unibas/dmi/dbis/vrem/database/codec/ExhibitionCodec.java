@@ -1,7 +1,7 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;
 import java.util.LinkedList;
 import java.util.List;
 import org.bson.BsonReader;

@@ -1,11 +1,13 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
+import ch.unibas.dmi.dbis.vrem.database.codec.cuboidCodec.RoomCodec;
+import ch.unibas.dmi.dbis.vrem.database.codec.cuboidCodec.WallCodec;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.collection.ArtCollection;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Room;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Wall;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
