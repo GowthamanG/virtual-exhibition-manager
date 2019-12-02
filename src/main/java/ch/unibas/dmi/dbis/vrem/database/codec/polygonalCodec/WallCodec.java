@@ -16,7 +16,8 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 public class WallCodec implements Codec<Wall> {
 
-    private final String FIELD_NAME_WALLNUMBER = "wallnumber";
+    private final String FIELD_NAME_WALLNUMBER = "wallNumber";
+    private final String FIELD_NAME_WALLCOORDINATES = "wallCoordinates";
     private final String FIELD_NAME_TEXTURE = "texture";
     private final String FIELD_NAME_COLOR = "color";
     private final String FIELD_NAME_EXHIBITS = "exhibits";
@@ -40,10 +41,18 @@ public class WallCodec implements Codec<Wall> {
         Vector3f position = null;
         Vector3f color = null;
         List<Exhibit> exhibits = new ArrayList<>();
+        List<Vector3f> wallCoordinates = new ArrayList<>();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
                 case FIELD_NAME_WALLNUMBER:
                      wallNumber = reader.readInt32();
+                    break;
+                case FIELD_NAME_WALLCOORDINATES:
+                    reader.readStartArray();
+                    while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                        wallCoordinates.add(this.vectorCodec.decode(reader, decoderContext));
+                    }
+                    reader.readEndArray();
                     break;
                 case FIELD_NAME_TEXTURE:
                     //texture = Texture.valueOf(reader.readString());
@@ -73,6 +82,9 @@ public class WallCodec implements Codec<Wall> {
         } else {
             wall = new Wall(wallNumber, texture);
         }
+
+        wall.wallCoordinates.addAll(wallCoordinates);
+
         for (Exhibit exhibit : exhibits) {
             wall.placeExhibit(exhibit);
         }
@@ -83,6 +95,12 @@ public class WallCodec implements Codec<Wall> {
     public void encode(BsonWriter writer, Wall value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeString(FIELD_NAME_WALLNUMBER, String.valueOf(value.wallNumber));
+        writer.writeName(FIELD_NAME_WALLCOORDINATES);
+        writer.writeStartArray();
+        for (Vector3f coordinate : value.wallCoordinates) {
+            this.vectorCodec.encode(writer, coordinate, encoderContext);
+        }
+        writer.writeEndArray();
         writer.writeString(FIELD_NAME_TEXTURE, value.texture);
         writer.writeName(FIELD_NAME_COLOR);
         this.vectorCodec.encode(writer, value.color, encoderContext);
