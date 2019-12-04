@@ -37,7 +37,7 @@ public class WallCodec implements Codec<Wall> {
     public Wall decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
         String texture = null;
-        int wallNumber = 0;
+        String wallNumber = null;
         Vector3f position = null;
         Vector3f color = null;
         List<Exhibit> exhibits = new ArrayList<>();
@@ -45,7 +45,7 @@ public class WallCodec implements Codec<Wall> {
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
                 case FIELD_NAME_WALLNUMBER:
-                     wallNumber = reader.readInt32();
+                     wallNumber = reader.readString();
                     break;
                 case FIELD_NAME_WALLCOORDINATES:
                     reader.readStartArray();

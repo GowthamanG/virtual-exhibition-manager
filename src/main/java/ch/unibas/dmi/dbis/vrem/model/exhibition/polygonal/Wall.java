@@ -28,7 +28,7 @@ public class Wall {
     /**
      *
      */
-    public int wallNumber;
+    public String wallNumber;
 
     /**
      *
@@ -38,7 +38,7 @@ public class Wall {
     /**
      *
      */
-    public Wall(int wallNumber, Vector3f color) {
+    public Wall(String wallNumber, Vector3f color) {
         this.wallNumber = wallNumber;
         this.color = color;
         this.texture = Texture.NONE.toString();
@@ -47,7 +47,7 @@ public class Wall {
     /**
      *
      */
-    public Wall(int wallNumber, String texture) {
+    public Wall(String wallNumber, String texture) {
         this.wallNumber = wallNumber;
         this.color = Vector3f.UNIT;
         this.texture = texture;

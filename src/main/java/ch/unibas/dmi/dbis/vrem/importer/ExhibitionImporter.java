@@ -203,10 +203,10 @@ public class ExhibitionImporter implements Runnable {
         if (Paths.get(wallFolder.getPath(), WALL_CONFIG_FILE).toFile().exists()) {
             String json = new String(Files.readAllBytes(Paths.get(wallFolder.getPath(), WALL_CONFIG_FILE)), UTF_8);
             wallConfig = gson.fromJson(json, Wall.class);
-            wallConfig.wallNumber = wallNumber;
+            wallConfig.wallNumber = String.valueOf(wallNumber);
             LOGGER.trace("Loaded wall config:\n{}", gson.toJson(wallConfig));
         } else {
-            wallConfig = new Wall(wallNumber, Texture.NONE.name());
+            wallConfig = new Wall(String.valueOf(wallNumber), Texture.NONE.name());
             LOGGER.debug("Created new wall with default config");
         }
 
