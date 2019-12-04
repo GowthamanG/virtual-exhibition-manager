@@ -48,6 +48,10 @@ public class Room {
     }
 
     public void addWall(Wall wall) {
+        if (this.walls == null) {
+            this.walls = new ArrayList<>();
+        }
+
         this.walls.add(wall);
     }
 

@@ -181,8 +181,10 @@ public class ExhibitionImporter implements Runnable {
         do {
             wallFiles.add(Paths.get(room.getPath(), String.valueOf(wallNumber)).toFile());
 
-            if(Files.exists(Paths.get(room.getPath(), String.valueOf(wallNumber + 1))))
+            if(Files.exists(Paths.get(room.getPath(), String.valueOf(wallNumber + 1)))) {
                 wallAvailable = true;
+                wallNumber += 1;
+            }
             else
                 wallAvailable = false;
 
