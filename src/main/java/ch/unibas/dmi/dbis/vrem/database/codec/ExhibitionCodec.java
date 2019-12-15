@@ -1,5 +1,6 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Corridor;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;
 import java.util.LinkedList;
@@ -20,11 +21,14 @@ public class ExhibitionCodec implements Codec<Exhibition> {
     public static final String FIELD_NAME_NAME = "name";
     public static final String FIELD_NAME_DESCRIPTION = "description";
     public static final String FIELD_NAME_ROOMS = "rooms";
+    public static final String FIELD_NAME_CORRIDORS = "corridors";
 
-    private final Codec<Room> codec;
+    private final Codec<Room> codecRoom;
+    private final Codec<Corridor> codecCorridor;
 
     public ExhibitionCodec(CodecRegistry registry) {
-        this.codec = registry.get(Room.class);
+        this.codecRoom = registry.get(Room.class);
+        this.codecCorridor = registry.get(Corridor.class);
     }
 
     @Override
@@ -34,6 +38,7 @@ public class ExhibitionCodec implements Codec<Exhibition> {
         String name = null;
         String description = null;
         List<Room> rooms = new LinkedList<>();
+        List<Corridor> corridors = new LinkedList<>();
 
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
@@ -49,7 +54,14 @@ public class ExhibitionCodec implements Codec<Exhibition> {
                 case FIELD_NAME_ROOMS:
                     reader.readStartArray();
                     while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                        rooms.add(this.codec.decode(reader, decoderContext));
+                        rooms.add(this.codecRoom.decode(reader, decoderContext));
+                    }
+                    reader.readEndArray();
+                    break;
+                case FIELD_NAME_CORRIDORS:
+                    reader.readStartArray();
+                    while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                        corridors.add(this.codecCorridor.decode(reader, decoderContext));
                     }
                     reader.readEndArray();
                     break;
@@ -60,9 +72,15 @@ public class ExhibitionCodec implements Codec<Exhibition> {
         }
         reader.readEndDocument();
         final Exhibition exhibition = new Exhibition(id, name, description);
+
         for (Room room : rooms) {
             exhibition.addRoom(room);
         }
+
+        for (Corridor corridor : corridors) {
+            exhibition.addCorridor(corridor);
+        }
+
         return exhibition;
     }
 
@@ -75,7 +93,14 @@ public class ExhibitionCodec implements Codec<Exhibition> {
         writer.writeName(FIELD_NAME_ROOMS);
         writer.writeStartArray();
         for (Room room : value.getRooms()) {
-            this.codec.encode(writer, room, encoderContext);
+            this.codecRoom.encode(writer, room, encoderContext);
+        }
+        writer.writeEndArray();
+
+        writer.writeName(FIELD_NAME_CORRIDORS);
+        writer.writeStartArray();
+        for (Corridor corridor : value.getCorridors()) {
+            this.codecCorridor.encode(writer, corridor, encoderContext);
         }
         writer.writeEndArray();
         writer.writeEndDocument();

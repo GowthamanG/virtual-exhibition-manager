@@ -21,6 +21,8 @@ public class VREMCodecProvider implements CodecProvider {
             return (Codec<T>) new ExhibitionCodec(registry);
         } else if (clazz == Room.class) {
             return (Codec<T>) new RoomCodec(registry);
+        } else if (clazz == Corridor.class) {
+            return (Codec<T>) new CorridorCodec(registry);
         } else if (clazz == Wall.class) {
             return (Codec<T>) new WallCodec(registry);
         } else if (clazz == Exhibit.class) {

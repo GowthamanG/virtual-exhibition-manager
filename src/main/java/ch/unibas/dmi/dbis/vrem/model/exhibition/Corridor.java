@@ -1,14 +1,16 @@
-package ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid;
+package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Room {
+/**
+ * A Corridor is a Room with only 2 walls
+ */
+public class Corridor {
+
 
     public final String text;
 
@@ -28,17 +30,19 @@ public class Room {
      *
      * List of walls (4 max).
      */
-    private List<Wall> walls = new ArrayList<>(4);
+    private List<Wall> walls = new ArrayList<>(2);
 
-    public Room(String text, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
-        this(text, new ArrayList<>(4), floor.name(), ceiling.name(), size, position, entrypoint, null);
+    public List<Room> connects = new ArrayList<>(2);
+
+    public Corridor(String text, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, List<Room> connects) {
+        this(text, new ArrayList<>(2), floor.name(), ceiling.name(), size, position, entrypoint, null, connects);
     }
 
-    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
-        this(text, walls, floor.toString(), ceiling.toString(), size, position, entrypoint, null);
+    public Corridor(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, List<Room> connects) {
+        this(text, walls, floor.toString(), ceiling.toString(), size, position, entrypoint, null, connects);
     }
 
-    public Room(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
+    public Corridor(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient, List<Room> connects) {
         this.floor = floor;
         this.ceiling = ceiling;
         this.size = size;
@@ -47,6 +51,7 @@ public class Room {
         this.entrypoint = entrypoint;
         this.walls.addAll(walls);
         this.ambient = ambient;
+        this.connects = connects;
     }
 
     public boolean placeExhibit(Exhibit exhibit) {
@@ -79,14 +84,6 @@ public class Room {
         this.walls.add(w);
     }
 
-    public Wall getEast() {
-        return this.walls.stream().filter(w -> w.direction == Direction.EAST).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
-    }
-
-    public void setEast(Wall wall) {
-        setWall(Direction.EAST, wall);
-    }
-
     public Wall getSouth() {
         return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
     }
@@ -95,17 +92,9 @@ public class Room {
         setWall(Direction.SOUTH, wall);
     }
 
-    public Wall getWest() {
-        return this.walls.stream().filter(w -> w.direction == Direction.WEST).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
-    }
-
-    public void setWest(Wall wall) {
-        setWall(Direction.WEST, wall);
-    }
-
     @Override
     public String toString() {
-        return "Room{" + "text='" + this.text + '\'' + ", floor='" + this.floor + '\'' + ", ceiling='" + this.ceiling + '\'' + ", size=" + this.size + ", entrypoint=" + this.entrypoint + ", ambient='" + this.ambient + '\'' + ", exhibits=" + this.exhibits + ", position=" + this.position + ", walls=" + this.walls + '}';
+        return "Corridor{" + "text='" + this.text + '\'' + ", floor='" + this.floor + '\'' + ", ceiling='" + this.ceiling + '\'' + ", size=" + this.size + ", entrypoint=" + this.entrypoint + ", ambient='" + this.ambient + '\'' + ", exhibits=" + this.exhibits + ", position=" + this.position + ", walls=" + this.walls + '}';
     }
 
     public List<Exhibit> getExhibits() {
