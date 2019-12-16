@@ -1,6 +1,8 @@
 package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Wall;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +56,18 @@ public class Corridor {
         this.connects = connects;
     }
 
+    public void addWall(Wall wall) {
+        if (this.walls == null) {
+            this.walls = new ArrayList<>();
+        }
+
+        this.walls.add(wall);
+    }
+
+    public List<Wall> getWalls() {
+        return this.walls;
+    }
+
     public boolean placeExhibit(Exhibit exhibit) {
         if (exhibit.type != CulturalHeritageObject.CHOType.MODEL) {
             throw new IllegalArgumentException("Only 3D objects can be placed in a room.");
@@ -65,31 +79,12 @@ public class Corridor {
         return false;
     }
 
-    public Wall getNorth() {
-        return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
-    }
-
-    public void setNorth(Wall wall) {
-        setWall(Direction.NORTH, wall);
-    }
-
-    private void setWall(Direction dir, Wall w) {
-        if (w.direction != dir) {
-            throw new IllegalArgumentException("Wall direction not matching. Expected " + dir + ", but " + w.direction + " given");
-        }
+    private void setWall(Wall w) {
         //this.walls.add(dir.ordinal(),w);
         if (this.walls == null) {
             this.walls = new ArrayList<>();
         }
         this.walls.add(w);
-    }
-
-    public Wall getSouth() {
-        return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
-    }
-
-    public void setSouth(Wall wall) {
-        setWall(Direction.SOUTH, wall);
     }
 
     @Override

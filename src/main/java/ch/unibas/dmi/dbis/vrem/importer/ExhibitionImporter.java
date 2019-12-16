@@ -11,6 +11,7 @@ import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMWriter;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Corridor;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
@@ -223,8 +224,25 @@ public class ExhibitionImporter implements Runnable {
         File north = Paths.get(corridor.getPath(), NORTH_WALL_NAME).toFile();
         File south = Paths.get(corridor.getPath(), SOUTH_WALL_NAME).toFile();
 
-        corridorConfig.setNorth(importWall(NORTH, north, root));
-        corridorConfig.setSouth(importWall(SOUTH, south, root));
+        List<File> wallFiles = new ArrayList<>();
+        boolean wallAvailable = false;
+        int wallNumber = 0;
+
+        do {
+            wallFiles.add(Paths.get(corridor.getPath(), String.valueOf(wallNumber)).toFile());
+
+            if(Files.exists(Paths.get(corridor.getPath(), String.valueOf(wallNumber + 1)))) {
+                wallAvailable = true;
+                wallNumber += 1;
+            }
+            else
+                wallAvailable = false;
+
+        } while (wallAvailable);
+
+        for (int i = 0; i < wallFiles.size(); i++) {
+            corridorConfig.addWall(importWall(i, wallFiles.get(i), root));
+        }
 
         corridorConfig.position = calculatePosition(corridorConfig, siblingsCorridors);
 

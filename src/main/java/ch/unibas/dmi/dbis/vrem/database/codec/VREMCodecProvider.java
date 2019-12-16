@@ -4,6 +4,7 @@ import ch.unibas.dmi.dbis.vrem.database.codec.polygonalCodec.RoomCodec;
 import ch.unibas.dmi.dbis.vrem.database.codec.polygonalCodec.WallCodec;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.collection.ArtCollection;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Corridor;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;

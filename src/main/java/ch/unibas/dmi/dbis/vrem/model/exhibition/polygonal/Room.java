@@ -30,7 +30,6 @@ public class Room {
 
     public Room(String text, Texture floor, Texture ceiling, Vector3f position, Vector3f entrypoint) {
         this(text, new ArrayList<>(), floor.name(), ceiling.name(), position, entrypoint, null);
-
     }
 
     public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f position, Vector3f entrypoint) {

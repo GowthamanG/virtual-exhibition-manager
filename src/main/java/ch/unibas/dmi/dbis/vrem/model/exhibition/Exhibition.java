@@ -86,10 +86,11 @@ public class Exhibition {
         if(corridors == null){
             return Collections.unmodifiableList(new ArrayList<>());
         }else{
-            this.corridors.forEach(r -> {
+            this.rooms.forEach(r -> {
                 list.addAll(r.getExhibits());
-                list.addAll(r.getNorth().getExhibits());
-                list.addAll(r.getSouth().getExhibits());
+                r.getWalls().forEach(w -> {
+                    list.addAll(w.getExhibits());
+                });
             });
         }
 

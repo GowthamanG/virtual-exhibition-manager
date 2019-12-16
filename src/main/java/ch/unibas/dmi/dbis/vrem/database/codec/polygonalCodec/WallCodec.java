@@ -1,7 +1,6 @@
 package ch.unibas.dmi.dbis.vrem.database.codec.polygonalCodec;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid.Direction;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Wall;
 import java.util.ArrayList;

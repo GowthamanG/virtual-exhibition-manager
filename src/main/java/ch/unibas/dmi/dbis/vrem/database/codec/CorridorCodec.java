@@ -5,6 +5,9 @@ import ch.unibas.dmi.dbis.vrem.model.exhibition.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Wall;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -132,8 +135,8 @@ public class CorridorCodec implements Codec<Corridor> {
         this.vectorCodec.encode(writer, value.entrypoint, encoderContext);
         writer.writeName(FIELD_NAME_WALLS);
         writer.writeStartArray();
-        this.wallCodec.encode(writer, value.getNorth(), encoderContext);
-        this.wallCodec.encode(writer, value.getSouth(), encoderContext);
+        for (Wall wall: value.getWalls())
+            this.wallCodec.encode(writer, wall, encoderContext);
         writer.writeEndArray();
         writer.writeName(FIELD_NAME_EXHIBITS);
         writer.writeStartArray();
