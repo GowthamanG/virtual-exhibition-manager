@@ -71,7 +71,7 @@ public class ExhibitionImporter implements Runnable {
     public static final String PNG_EXTENSION = "png";
     public static final String JPG_EXTENSION = "jpg";
     public static final String JSON_EXTENSION = "json";
-    //public static final Vector3f ROOM_SIZE = new Vector3f(10, 5, 10);
+    public static final double ROOM_HEIGHT = 5.0;
     public static final Vector3f ENTRYPOINT = Vector3f.ORIGIN;
 
     public static final float ROOM_BORDER = 0.5f;
@@ -165,10 +165,9 @@ public class ExhibitionImporter implements Runnable {
             roomConfig = gson.fromJson(configJson, Room.class);
             LOGGER.trace("Loaded room config:\n{}", gson.toJson(roomConfig));
         } else {
-            roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, Vector3f.ORIGIN, ENTRYPOINT);
+            roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, ROOM_HEIGHT, Vector3f.ORIGIN,1.0);
             LOGGER.debug("Created new room without room config");
         }
-        roomConfig.entrypoint = ENTRYPOINT;
         File north = Paths.get(room.getPath(), NORTH_WALL_NAME).toFile();
         File east = Paths.get(room.getPath(), EAST_WALL_NAME).toFile();
         File south = Paths.get(room.getPath(), SOUTH_WALL_NAME).toFile();
