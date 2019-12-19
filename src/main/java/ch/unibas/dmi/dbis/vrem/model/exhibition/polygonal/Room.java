@@ -16,32 +16,37 @@ public class Room {
 
     public final String ceiling;
 
-    public Vector3f entrypoint;
+    public double height;
     public final String ambient;
     /**
      * List of exhibits (only 3D models valid).
      */
     private List<Exhibit> exhibits = new ArrayList<>();
     public Vector3f position;
+
+    public double ceiling_scale;
+
     /**
      * List of walls.
      */
     private List<Wall> walls = new ArrayList<>();
 
-    public Room(String text, Texture floor, Texture ceiling, Vector3f position, Vector3f entrypoint) {
-        this(text, new ArrayList<>(), floor.name(), ceiling.name(), position, entrypoint, null);
+    public Room(String text, Texture floor, Texture ceiling, double height, Vector3f position, double ceiling_scale) {
+        this(text, new ArrayList<>(), floor.name(), ceiling.name(), height, position, ceiling_scale, null);
+
     }
 
-    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f position, Vector3f entrypoint) {
-        this(text, walls, floor.toString(), ceiling.toString(), position, entrypoint, null);
+    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, double height, Vector3f position, double ceiling_scale) {
+        this(text, walls, floor.toString(), ceiling.toString(), height, position, ceiling_scale, null);
     }
 
-    public Room(String text, List<Wall> walls, String floor, String ceiling, Vector3f position, Vector3f entrypoint, String ambient) {
+    public Room(String text, List<Wall> walls, String floor, String ceiling, double height, Vector3f position, double ceiling_scale, String ambient) {
         this.floor = floor;
         this.ceiling = ceiling;
         this.text = text;
+        this.height = height;
         this.position = position;
-        this.entrypoint = entrypoint;
+        this.ceiling_scale = ceiling_scale;
         this.walls.addAll(walls);
         this.ambient = ambient;
     }
@@ -81,7 +86,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room{" + "text='" + text + '\'' + ", floor='" + floor + '\'' + ", ceiling='" + ceiling + '\'' + ", entrypoint=" + entrypoint + ", ambient='" + ambient + '\'' + ", exhibits=" + exhibits + ", position=" + position + ", walls=" + walls + '}';
+        return "Room{" + "text='" + text + '\'' + ", floor='" + floor + '\'' + ", ceiling='" + ceiling + '\'' + ", ambient='" + ambient + '\'' + ", exhibits=" + exhibits + ", position=" + position + ", walls=" + walls + '}';
     }
 
     public List<Exhibit> getExhibits() {

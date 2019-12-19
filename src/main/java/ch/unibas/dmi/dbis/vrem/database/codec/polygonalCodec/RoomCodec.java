@@ -21,8 +21,10 @@ public class RoomCodec implements Codec<Room> {
     private final String FIELD_NAME_FLOOR = "floor";
     private final String FIELD_NAME_CEILING = "ceiling";
     //private final String FIELD_NAME_SIZE = "size";
+    private final String FIELD_NAME_CEILING_SCALE = "ceiling_scale";
+    private final String FIELD_NAME_HEIGHT = "height";
     private final String FIELD_NAME_POSITION = "position";
-    private final String FIELD_NAME_ENTRYPOINT = "entrypoint";
+    //private final String FIELD_NAME_ENTRYPOINT = "entrypoint";
     private final String FIELD_NAME_WALLS = "walls";
     private final String FIELD_NAME_EXHIBITS = "exhibits";
     private final String FIELD_NAME_AMBIENT = "ambient";
@@ -52,8 +54,10 @@ public class RoomCodec implements Codec<Room> {
         String floor = Texture.WOOD1.name();
         String ceiling = Texture.CONCRETE.name();
         //Vector3f size = null;
+        double ceiling_scale = 1.0;
+        double height = 5.0;
         Vector3f position = null;
-        Vector3f entrypoint = null;
+        //Vector3f entrypoint = null;
         List<Wall> walls = new ArrayList<>();
         List<Exhibit> exhibits = new ArrayList<>();
         String ambient = null;
@@ -72,12 +76,18 @@ public class RoomCodec implements Codec<Room> {
                 /*case FIELD_NAME_SIZE:
                     size = this.vectorCodec.decode(reader, decoderContext);
                     break;*/
+                case FIELD_NAME_CEILING_SCALE:
+                    ceiling_scale = reader.readDouble();
+                    break;
+                case FIELD_NAME_HEIGHT:
+                    height = reader.readDouble();
+                    break;
                 case FIELD_NAME_POSITION:
                     position = this.vectorCodec.decode(reader, decoderContext);
                     break;
-                case FIELD_NAME_ENTRYPOINT:
+                /*case FIELD_NAME_ENTRYPOINT:
                     entrypoint = this.vectorCodec.decode(reader, decoderContext);
-                    break;
+                    break;*/
                 case FIELD_NAME_WALLS:
                     reader.readStartArray();
                     while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -101,7 +111,7 @@ public class RoomCodec implements Codec<Room> {
             }
         }
         reader.readEndDocument();
-        final Room room = new Room(text, walls, floor, ceiling, position, entrypoint, ambient);
+        final Room room = new Room(text, walls, floor, ceiling, height, position, ceiling_scale, ambient);
         for (Exhibit exhibit : exhibits) {
             room.placeExhibit(exhibit);
         }
@@ -116,10 +126,12 @@ public class RoomCodec implements Codec<Room> {
         writer.writeString(FIELD_NAME_CEILING, value.ceiling);
         /*writer.writeName(FIELD_NAME_SIZE);
         this.vectorCodec.encode(writer, value.size, encoderContext);*/
+        writer.writeDouble(FIELD_NAME_HEIGHT, value.height);
         writer.writeName(FIELD_NAME_POSITION);
         this.vectorCodec.encode(writer, value.position, encoderContext);
-        writer.writeName(FIELD_NAME_ENTRYPOINT);
-        this.vectorCodec.encode(writer, value.entrypoint, encoderContext);
+        writer.writeDouble(FIELD_NAME_CEILING_SCALE, value.ceiling_scale);
+        /*writer.writeName(FIELD_NAME_ENTRYPOINT);
+        this.vectorCodec.encode(writer, value.entrypoint, encoderContext);*/
         writer.writeName(FIELD_NAME_WALLS);
         writer.writeStartArray();
         for (Wall wall: value.getWalls())
