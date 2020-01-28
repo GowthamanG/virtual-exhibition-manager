@@ -1,6 +1,8 @@
-package ch.unibas.dmi.dbis.vrem.model.exhibition;
+package ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +23,12 @@ public class Wall {
     /**
      *
      */
-    public Direction direction;
+    public List<Vector3f> wallCoordinates = new ArrayList<>(4);
+
+    /**
+     *
+     */
+    public String wallNumber;
 
     /**
      *
@@ -31,8 +38,8 @@ public class Wall {
     /**
      *
      */
-    public Wall(Direction direction, Vector3f color) {
-        this.direction = direction;
+    public Wall(String wallNumber, Vector3f color) {
+        this.wallNumber = wallNumber;
         this.color = color;
         this.texture = Texture.NONE.toString();
     }
@@ -40,8 +47,8 @@ public class Wall {
     /**
      *
      */
-    public Wall(Direction direction, String texture) {
-        this.direction = direction;
+    public Wall(String wallNumber, String texture) {
+        this.wallNumber = wallNumber;
         this.color = Vector3f.UNIT;
         this.texture = texture;
     }

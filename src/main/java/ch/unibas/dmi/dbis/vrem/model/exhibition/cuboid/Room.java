@@ -1,6 +1,8 @@
-package ch.unibas.dmi.dbis.vrem.model.exhibition;
+package ch.unibas.dmi.dbis.vrem.model.exhibition.cuboid;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +25,7 @@ public class Room {
     private List<Exhibit> exhibits = new ArrayList<>();
     public Vector3f position;
     /**
+     *
      * List of walls (4 max).
      */
     private List<Wall> walls = new ArrayList<>(4);
@@ -102,7 +105,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room{" + "text='" + text + '\'' + ", floor='" + floor + '\'' + ", ceiling='" + ceiling + '\'' + ", size=" + size + ", entrypoint=" + entrypoint + ", ambient='" + ambient + '\'' + ", exhibits=" + exhibits + ", position=" + position + ", walls=" + walls + '}';
+        return "Room{" + "text='" + this.text + '\'' + ", floor='" + this.floor + '\'' + ", ceiling='" + this.ceiling + '\'' + ", size=" + this.size + ", entrypoint=" + this.entrypoint + ", ambient='" + this.ambient + '\'' + ", exhibits=" + this.exhibits + ", position=" + this.position + ", walls=" + this.walls + '}';
     }
 
     public List<Exhibit> getExhibits() {

@@ -1,11 +1,14 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
+import ch.unibas.dmi.dbis.vrem.database.codec.polygonalCodec.RoomCodec;
+import ch.unibas.dmi.dbis.vrem.database.codec.polygonalCodec.WallCodec;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.collection.ArtCollection;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Corridor;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Room;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.polygonal.Wall;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -19,6 +22,8 @@ public class VREMCodecProvider implements CodecProvider {
             return (Codec<T>) new ExhibitionCodec(registry);
         } else if (clazz == Room.class) {
             return (Codec<T>) new RoomCodec(registry);
+        } else if (clazz == Corridor.class) {
+            return (Codec<T>) new CorridorCodec(registry);
         } else if (clazz == Wall.class) {
             return (Codec<T>) new WallCodec(registry);
         } else if (clazz == Exhibit.class) {
